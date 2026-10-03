@@ -46,7 +46,7 @@ LOCKED_HINT = (
 
 def cache_dir() -> Path:
     """Local cache for the downloaded helper jar."""
-    return Path.home() / ".phonesploit-pro" / "helpers" / "adb-clip"
+    return Path.home() / ".atom-toolkit" / "helpers" / "adb-clip"
 
 
 def cached_jar() -> Path:

@@ -105,7 +105,7 @@ def _run_dependency_installer(config: AppConfig, component_keys: list[str]) -> N
         )
 
     console.print(
-        "[bold dim]If tools are still not detected, open a new terminal and run PhoneSploit Pro again "
+        "[bold dim]If tools are still not detected, open a new terminal and run Atom again "
         "(PATH may need a refresh).[/bold dim]"
     )
 

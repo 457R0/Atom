@@ -1,9 +1,10 @@
 """
 COPYRIGHT DISCLAIMER
 
-Script : PhoneSploit Pro - All in One Android Hacking ADB Toolkit
+Script : Atom - All in One Android Hacking ADB Toolkit
 
-Copyright (C) 2026  Azeem Idrisi (github.com/AzeemIdrisi)
+Original work Copyright (C) 2026  Azeem Idrisi (github.com/AzeemIdrisi)
+Fork Copyright (C) 2026  TezukaLabs
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,11 +19,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-Forking and modifying are allowed, but credit must be given to the
-original developer, [Azeem Idrisi (github.com/AzeemIdrisi)], and copying the code
-is not permitted without permission.
+Forked from PhoneSploit Pro by Azeem Idrisi (github.com/AzeemIdrisi).
+Fork maintained by TezukaLabs.
 
-For any queries, Contact me at : azeemidrisiofficial@gmail.com
+For any queries, Contact: github.com/TezukaLabs
 """
 
 version = "v2.3"
@@ -46,92 +46,107 @@ Use 'Ctrl + C' to stop at any point
 
     [green]msf6 > [yellow]exit -y       [/yellow][/green]
 
-[bold red]\\[PhoneSploit Pro][/bold red]   Press 'Enter' to continue attack / '0' to Go Back to Main Menu
+[bold red]\\[Atom][/bold red]   Press 'Enter' to continue attack / '0' to Go Back to Main Menu
     """
 
+# banner2 — block-pipe style (figlet block font)
 banner2 = """
-        ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀ ░█▀▀▀█ █▀▀█ █── █▀▀█ ─▀─ ▀▀█▀▀ 　 ░█▀▀█ █▀▀█ █▀▀█
-        ░█▄▄█ █▀▀█ █──█ █──█ █▀▀ ─▀▀▀▄▄ █──█ █── █──█ ▀█▀ ──█── 　 ░█▄▄█ █▄▄▀ █──█
-        ░█─── ▀──▀ ▀▀▀▀ ▀──▀ ▀▀▀ ░█▄▄▄█ █▀▀▀ ▀▀▀ ▀▀▀▀ ▀▀▀ ──▀── 　 ░█─── ▀─▀▀ ▀▀▀▀
+                                            
+  _|_|    _|_|_|_|_|    _|_|    _|      _|  
+_|    _|      _|      _|    _|  _|_|  _|_|  
+_|_|_|_|      _|      _|    _|  _|  _|  _|  
+_|    _|      _|      _|    _|  _|      _|  
+_|    _|      _|        _|_|    _|      _|  
+                                            
 
 
-            [bold red]{version}[/bold red]            [bold white]By github.com/AzeemIdrisi[/bold white]
+            [bold red]{version}[/bold red]                    [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner3 — bubble style
 banner3 = """
-        █▀█ █░█ █▀█ █▄░█ █▀▀ █▀ █▀█ █░░ █▀█ █ ▀█▀   █▀█ █▀█ █▀█
-        █▀▀ █▀█ █▄█ █░▀█ ██▄ ▄█ █▀▀ █▄▄ █▄█ █ ░█░   █▀▀ █▀▄ █▄█
+  _   _   _   _  
+ / \\ / \\ / \\ / \\ 
+( A | T | O | M )
+ \\_/ \\_/ \\_/ \\_/ 
 
 
-            [bold red]{version}[/bold red]             [bold white]By github.com/AzeemIdrisi[/bold white]
+            [bold red]{version}[/bold red]             [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner4 — standard style
 banner4 = """
-    _________.__                           _________      .__         .__  __    __________
-    \\______  \\  |__   ____   ____  ____  /   _____/_____ |  |   ____ |__|/  |_  \\______   \\_______  ____
-    |     ___/  |  \\ /  _ \\ /    \\_/ __ \\ \\_____  \\\\____ \\|  |  /  _ \\|  \\   __\\  |     ___/\\_  __ \\/  _ \\
-    |    |   |   Y  (  <_> )   |  \\  ___/ /        \\  |_> >  |_(  <_> )  ||  |    |    |     |  | \\(  <_> )
-    |____|   |___|  /\\____/|___|  /\\___  >_______  /   __/|____/\\____/|__||__|    |____|     |__|   \\____/
-                  \\/            \\/     \\/        \\/ |__|
+    _  _____ ___  __  __ 
+   / \\|_   _/ _ \\|  \\/  |
+  / _ \\ | || | | | |\\/| |
+ / ___ \\| || |_| | |  | |
+/_/   \\_\\_| \\___/|_|  |_|
+                         
 
 
-        [bold red]{version}[/bold red]                             [bold white]By github.com/AzeemIdrisi[/bold white]
+        [bold red]{version}[/bold red]                             [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner5 — slant style
 banner5 = """
-       ___  __                 ____     __     _ __     ___
-      / _ \\/ /  ___  ___  ___ / __/__  / /__  (_) /_   / _ \\_______ 
-     / ___/ _ \\/ _ \\/ _ \\/ -_)\\ \\/ _ \\/ / _ \\/ / __/  / ___/ __/ _ \\
-    /_/  /_//_/\\___/_//_/\\__/___/ .__/_/\\___/_/\\__/  /_/  /_/  \\___/
-                               /_/
+    ___  __________  __  ___
+   /   |/_  __/ __ \\/  |/  /
+  / /| | / / / / / / /|_/ / 
+ / ___ |/ / / /_/ / /  / /  
+/_/  |_/_/  \\____/_/  /_/   
+                            
 
-        [bold red]{version}[/bold red]        [bold white]By github.com/AzeemIdrisi[/bold white]
+
+        [bold red]{version}[/bold red]        [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner6 — lean style
 banner6 = """
-        ____  __                    _____       __      _ __       ____
-       / __ \\/ /_  ____  ____  ___ / ___/____  / /___  (_) /_     / __ \\___________
-      / /_/ / __ \\/ __ \\/ __ \\/ _ \\\\__ \\/ __ \\/ / __ \\/ / __/    / /_/ / ___/ __ \\
-     / ____/ / / / /_/ / / / /  __/__/ / /_/ / / /_/ / / /_     / ____/ /  / /_/ /
-    /_/   /_/ /_/\\____/_/ /_/\\___/____/ .___/_/\\____/_/\\__/    /_/   /_/   \\____/
-                                     /_/
+                                                 
+      _/_/    _/_/_/_/_/    _/_/    _/      _/   
+   _/    _/      _/      _/    _/  _/_/  _/_/    
+  _/_/_/_/      _/      _/    _/  _/  _/  _/     
+ _/    _/      _/      _/    _/  _/      _/      
+_/    _/      _/        _/_/    _/      _/       
+                                                 
+                                                 
 
-           [bold red]{version}[/bold red]               [bold white]By github.com/AzeemIdrisi[/bold white]
+           [bold red]{version}[/bold red]               [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner10 — script / calligraphic style
 banner10 = """
-     ____    __                              ____            ___               __        ____
-    /\\  _`\\ /\\ \\                            /\\  _`\\         /\\_ \\           __/\\ \\__    /\\  _`\\
-    \\ \\ \\L\\ \\ \\ \\___     ___     ___      __\\ \\,\\L\\_\\  _____\\//\\ \\     ___ /\\_\\ \\ ,_\\   \\ \\ \\L\\ \\_ __   ___
-     \\ \\ ,__/\\ \\  _ `\\  / __`\\ /' _ `\\  /'__`\\/_\\__ \\ /\\ '__`\\\\\\ \\ \\   / __`\\/\\ \\ \\ \\/    \\ \\ ,__/\\`'__\\/ __`\\
-      \\ \\ \\/  \\ \\ \\ \\ \\/\\ \\L\\ \\/\\ \\/\\ \\/\\  __/ /\\ \\L\\ \\ \\ \\L\\ \\\\_\\ \\_/\\ \\L\\ \\ \\ \\ \\ \\_    \\ \\ \\/\\ \\ \\//\\ \\L\\ \\
-       \\ \\_\\   \\ \\_\\ \\_\\ \\____/\\ \\_\\ \\_\\ \\____\\\\ `\\____\\ \\ ,__//\\____\\ \\____/\\ \\_\\ \\__\\    \\ \\_\\ \\ \\_\\\\ \\____/
-        \\/_/    \\/_/\\/_/\\/___/  \\/_/\\/_/\\/____/ \\/_____/\\ \\ \\/ \\/____/\\/___/  \\/_/\\/__/     \\/_/  \\/_/ \\/___/
-                                                         \\ \\_\\
-                                                          \\/_/
+  ___,                     
+ /   |                     
+|    | _|_  __   _  _  _   
+|    |  |  /  \\_/ |/ |/ |  
+ \\__/\\_/|_/\\__/   |  |  |_/
+                           
+                           
 
-            [bold red]{version}[/bold red]                                [bold white]By github.com/AzeemIdrisi[/bold white]
+            [bold red]{version}[/bold red]                                [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner11 — digital / box style
 banner11 = """
-    _____________                   ________       ______     __________       ________
-    ___  __ \\__  /_____________________  ___/__________  /________(_)_  /_      ___  __ \\____________
-    __  /_/ /_  __ \\  __ \\_  __ \\  _ \\____ \\___  __ \\_  /_  __ \\_  /_  __/      __  /_/ /_  ___/  __ \\
-    _  ____/_  / / / /_/ /  / / /  __/___/ /__  /_/ /  / / /_/ /  / / /_        _  ____/_  /   / /_/ /
-    /_/     /_/ /_/\\____//_/ /_/\\___//____/ _  .___//_/  \\____//_/  \\__/        /_/     /_/    \\____/
-                                            /_/
++-+-+-+-+
+|A|T|O|M|
++-+-+-+-+
 
 
-            [bold red]{version}[/bold red]                            [bold white]By github.com/AzeemIdrisi[/bold white]
+            [bold red]{version}[/bold red]                            [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
+# banner12 — shadow style
 banner12 = """
-        ▒█▀▀█ █░░█ █▀▀█ █▀▀▄ █▀▀ ▒█▀▀▀█ █▀▀█ █░░ █▀▀█ ░▀░ ▀▀█▀▀ 　 ▒█▀▀█ █▀▀█ █▀▀█
-        ▒█▄▄█ █▀▀█ █░░█ █░░█ █▀▀ ░▀▀▀▄▄ █░░█ █░░ █░░█ ▀█▀ ░░█░░ 　 ▒█▄▄█ █▄▄▀ █░░█
-        ▒█░░░ ▀░░▀ ▀▀▀▀ ▀░░▀ ▀▀▀ ▒█▄▄▄█ █▀▀▀ ▀▀▀ ▀▀▀▀ ▀▀▀ ░░▀░░ 　 ▒█░░░ ▀░▀▀ ▀▀▀▀
+    \\ __ __| _ \\   \\  | 
+   _ \\   |  |   | |\\/ | 
+  ___ \\  |  |   | |   | 
+_/    _\\_| \\___/ _|  _| 
+                        
 
 
-            [bold red]{version}[/bold red]                            [bold white]By github.com/AzeemIdrisi[/bold white]
+            [bold red]{version}[/bold red]                            [bold white]By TezukaLabs[/bold white]
 """.format(version=version)
 
 banner_list = [

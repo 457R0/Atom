@@ -502,7 +502,7 @@ def _run_statusbar(args: list[str], label: str) -> None:
 def notif_post(config: AppConfig) -> None:
     title = ask("[bold cyan]Title[/bold cyan]> ").strip()
     message = ask("[bold cyan]Message[/bold cyan]> ").strip()
-    tag = f"phonesploit-{datetime.now().strftime('%H%M%S')}"
+    tag = f"atom-{datetime.now().strftime('%H%M%S')}"
     if not title and not message:
         print_null_input()
         return

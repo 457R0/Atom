@@ -114,10 +114,10 @@ def clear_terminal(config: AppConfig) -> None:
 
 
 def _format_submenu_header(breadcrumb: list[str]) -> str:
-    """Build header: PhoneSploit Pro · Hub · Nested (skip Main Menu)."""
+    """Build header: Atom · Hub · Nested (skip Main Menu)."""
     parts = [p for p in breadcrumb if p != "Main Menu"]
     trail = " · ".join(parts)
-    return f"\n  [bold cyan]PhoneSploit Pro[/bold cyan]  ·  [bold white]{trail}[/bold white]\n"
+    return f"\n  [bold cyan]Atom[/bold cyan]  ·  [bold white]{trail}[/bold white]\n"
 
 
 def render_submenu_screen(
@@ -131,7 +131,7 @@ def render_submenu_screen(
     if breadcrumb:
         console.print(_format_submenu_header(breadcrumb))
     else:
-        console.print(f"\n  [bold cyan]PhoneSploit Pro[/bold cyan]  ·  [bold white]{title}[/bold white]\n")
+        console.print(f"\n  [bold cyan]Atom[/bold cyan]  ·  [bold white]{title}[/bold white]\n")
     col_count = columns if columns is not None else (2 if len(items) > 6 else 1)
     _render_menu_grid(items, columns=col_count)
     console.print("\n  [bold dim]0:[/bold dim] Back    [bold dim]99:[/bold dim] Clear")

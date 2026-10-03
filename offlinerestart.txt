@@ -1,0 +1,4 @@
+#run this if session dies and phone is disconnected in phonesploit
+adb disconnect 127.0.0.1:5555
+tmux kill-session -t ps_reconnect 2>/dev/null
+./reconnect.sh

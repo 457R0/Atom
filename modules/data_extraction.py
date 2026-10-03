@@ -59,6 +59,92 @@ def _write_dump(dest: Path, result: subprocess.CompletedProcess[str]) -> None:
     print_success(f"Saved {len(lines)} records to: {dest}")
 
 
+def _normalize_phone(number: str) -> str:
+    """Return last 10 digits of a phone number string for fuzzy matching."""
+    digits = re.sub(r"\D", "", number)
+    return digits[-10:] if len(digits) >= 10 else digits
+
+
+def _fetch_contacts_map(config: AppConfig) -> dict[str, str]:
+    """Query device contacts; return {normalized_number: display_name}."""
+    result = adb(
+        [
+            "shell", "content", "query",
+            "--uri", "content://contacts/phones/",
+            "--projection", "display_name:number",
+        ]
+    )
+    contacts: dict[str, str] = {}
+    if result.returncode != 0:
+        return contacts
+    row_re = re.compile(r"Row:\s*\d+\s+(.*)")
+    for line in result.stdout.splitlines():
+        m = row_re.match(line.strip())
+        if not m:
+            continue
+        fields: dict[str, str] = {}
+        for part in m.group(1).split(", "):
+            if "=" in part:
+                k, v = part.split("=", 1)
+                fields[k.strip()] = v.strip()
+        name = fields.get("display_name", "").strip()
+        number = fields.get("number", "").strip()
+        if name and number:
+            contacts[_normalize_phone(number)] = name
+    return contacts
+
+
+def _format_sms_output(raw: str, contacts: dict[str, str]) -> str:
+    """Reformat raw adb SMS content query output with contact names and MM/DD/YY dates.
+
+    Input rows look like:
+        Row: 0 address=+15551234567, date=1790985067898, body=Hello world
+
+    Output:
+        Row: 0
+        From: John Doe (+15551234567)
+        Date: 10/03/26
+        Message:
+        Hello world
+
+    """
+    chunks = re.split(r"(?=^Row:\s*\d+\s)", raw, flags=re.MULTILINE)
+    out_lines: list[str] = []
+
+    row_header_re = re.compile(
+        r"Row:\s*(\d+)\s+address=([^,]+),\s*date=(\d+),\s*body=(.*)", re.DOTALL
+    )
+
+    for chunk in chunks:
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        m = row_header_re.match(chunk)
+        if not m:
+            out_lines.append(chunk)
+            out_lines.append("")
+            continue
+
+        row_num = m.group(1)
+        address = m.group(2).strip()
+        date_ms = int(m.group(3))
+        body = m.group(4).strip()
+
+        norm = _normalize_phone(address)
+        name = contacts.get(norm)
+        from_label = f"{name} ({address})" if name else address
+
+        date_str = datetime.fromtimestamp(date_ms / 1000).strftime("%m/%d/%y")
+
+        out_lines.append(f"From: {from_label}")
+        out_lines.append(f"Date: {date_str}")
+        out_lines.append("Message:")
+        out_lines.append(body)
+        out_lines.append("")
+
+    return "\n".join(out_lines)
+
+
 def dump_sms(config: AppConfig) -> None:
     if not confirm(
         "Export all SMS messages from the device to a file on this computer? "
@@ -69,6 +155,9 @@ def dump_sms(config: AppConfig) -> None:
     file_name = f"sms_dump-{_timestamp()}.txt"
     dest = Path(save_dir) / file_name
 
+    with task_status("[info]Fetching contacts for name resolution…[/info]"):
+        contacts = _fetch_contacts_map(config)
+
     with task_status("[info]Dumping SMS…[/info]"):
         result = adb(
             [
@@ -78,7 +167,23 @@ def dump_sms(config: AppConfig) -> None:
             ]
         )
 
-    _write_dump(dest, result)
+    if result.returncode != 0:
+        err_msg = result.stderr.strip() or "(no stderr from adb)"
+        print_error(f"Dump failed: {err_msg}")
+        return
+
+    formatted = _format_sms_output(result.stdout, contacts)
+
+    try:
+        dest.write_text(formatted, encoding="utf-8")
+    except OSError as e:
+        print_error(f"Could not write dump file {dest}: {e}")
+        return
+
+    lines = [l for l in formatted.splitlines() if l.strip()]
+    print_success(f"Saved to: {dest}")
+    if contacts:
+        print_info(f"Resolved {len(contacts)} contacts for name lookup.")
 
 
 def dump_contacts(config: AppConfig) -> None:

@@ -1,9 +1,10 @@
 """
     COPYRIGHT DISCLAIMER
 
-    Script : PhoneSploit Pro - All in One Android Hacking ADB Toolkit
+    Script : Atom - All in One Android Hacking ADB Toolkit
 
-    Copyright (C) 2026  Azeem Idrisi (github.com/AzeemIdrisi)
+    Original work Copyright (C) 2026  Azeem Idrisi (github.com/AzeemIdrisi)
+    Fork Copyright (C) 2026  TezukaLabs
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,11 +19,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-    Forking and modifying are allowed, but credit must be given to the
-    original developer, [Azeem Idrisi (github.com/AzeemIdrisi)], and copying the code
-    is not permitted without permission.
-
-    For any queries, Contact me at : azeemidrisiofficial@gmail.com
+    Forked from PhoneSploit Pro by Azeem Idrisi (github.com/AzeemIdrisi).
+    Fork maintained by TezukaLabs.
 """
 
 from modules.cli import run
