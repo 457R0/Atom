@@ -1,15 +1,14 @@
 <div align="center">
   
-# PhoneSploit Pro
+# Atom
 
 The Swiss Army knife for Android.
 
 An all-in-one hacking tool written in `Python` to remotely take over Android devices using `ADB`, `scrcpy`, `Nmap`, and `Metasploit-Framework`.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/AzeemIdrisi/PhoneSploit-Pro)
 ![Python](https://img.shields.io/badge/python-v3.10%2B-blue)
-![GitHub Repo stars](https://img.shields.io/github/stars/AzeemIdrisi/PhoneSploit-Pro?style=social)
-![GitHub forks](https://img.shields.io/github/forks/AzeemIdrisi/PhoneSploit-Pro?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/TezukaLabs/Atom?style=social)
+![GitHub forks](https://img.shields.io/github/forks/TezukaLabs/Atom?style=social)
 
 </div>
 
@@ -26,7 +25,6 @@ An all-in-one hacking tool written in `Python` to remotely take over Android dev
 - [Installing tools manually](#installing-tools-manually)
 - [Disclaimer](#disclaimer)
 - [Developer](#developer)
-- [Support](#support)
 - [Attribution](#attribution)
 
 ---
@@ -37,7 +35,7 @@ An all-in-one hacking tool written in `Python` to remotely take over Android dev
 
 Connect over USB or Wi‑Fi, then control the device, extract data, stream camera and microphone, manage apps, and automate a full **Metasploit** compromise, all from one menu.
 
-You no longer need to memorize commands and arguments, PhoneSploit Pro does it for you. Pick a number and run.
+You no longer need to memorize commands and arguments, Atom does it for you. Pick a number and run.
 
 ---
 
@@ -64,7 +62,7 @@ You no longer need to memorize commands and arguments, PhoneSploit Pro does it f
 | **Restart / reboot**                     | Restart or reboot the device to `System`, `Recovery`, `Bootloader`, or `Fastboot`.                                                                                                                                                                                                                                                                                           |
 | **Power off**                            | Power off the target device.                                                                                                                                                                                                                                                                                                                                                 |
 | **Screenshot**                           | Take a screenshot and pull it to the computer automatically.                                                                                                                                                                                                                                                                                                                 |
-| **Screen recording**                     | Record the target device’s screen for a specified time and pull the recording to the computer automatically.                                                                                                                                                                                                                                                                 |
+| **Screen recording**                     | Record the target device's screen for a specified time and pull the recording to the computer automatically.                                                                                                                                                                                                                                                                 |
 | **Anonymous screenshot / screen record** | Take screenshots or screen recordings and remove the file from the target device afterward.                                                                                                                                                                                                                                                                                  |
 | **Mirror and control**                   | Mirror the screen and control the target device.                                                                                                                                                                                                                                                                                                                             |
 | **List files and folders**               | List all files and folders on the target device.                                                                                                                                                                                                                                                                                                                             |
@@ -170,7 +168,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 To install specific tools only: `.\install.ps1 -Components adb,nmap,pip`  
 For per-component prompts: `.\install.ps1 -Interactive`
 
-### From PhoneSploit Pro
+### From Atom
 
 If a dependency is missing, the program shows a **Missing Dependencies** warning. Press **`I`** to run the installer, **`Y`** to continue anyway, or **`N`** to exit.
 
@@ -179,15 +177,15 @@ If a dependency is missing, the program shows a **Missing Dependencies** warning
 ## Getting started
 
 > [!IMPORTANT]
-> **PhoneSploit Pro** requires Python version **3.10 or higher**. Please update Python before running the program.
+> **Atom** requires Python version **3.10 or higher**. Please update Python before running the program.
 
 ### Linux and macOS
 
 Make sure all [required](#requirements) software is installed.
 
 ```
-git clone https://github.com/AzeemIdrisi/PhoneSploit-Pro.git
-cd PhoneSploit-Pro/
+git clone https://github.com/457R0/Atom.git
+cd Atom/
 ```
 
 ```
@@ -197,7 +195,7 @@ pip install -r requirements.txt
 ```
 
 ```
-python3 phonesploitpro.py
+python3 atom.py
 ```
 
 > [!TIP]
@@ -208,8 +206,8 @@ python3 phonesploitpro.py
 Make sure all [required](#requirements) software is installed.
 
 ```
-git clone https://github.com/AzeemIdrisi/PhoneSploit-Pro.git
-cd PhoneSploit-Pro/
+git clone https://github.com/457R0/Atom.git
+cd Atom/
 ```
 
 ```
@@ -220,10 +218,10 @@ pip install -r requirements.txt
 
 1. Download and extract the latest `platform-tools` from [here](https://developer.android.com/studio/releases/platform-tools.html#downloads).
 
-2. Copy all files from the extracted `platform-tools` or `adb` directory into the **PhoneSploit-Pro** directory, then run:
+2. Copy all files from the extracted `platform-tools` or `adb` directory into the **Atom** directory, then run:
 
 ```
-python phonesploitpro.py
+python atom.py
 ```
 
 ---
@@ -267,13 +265,13 @@ adb tcpip 5555
 
 7. You can now connect the Android phone to the computer over Wi‑Fi using `adb`.
 8. Disconnect the USB cable.
-9. Go to `Settings` > `About Phone` > `Status` > `IP address` and note the phone’s `IP address`.
-10. Run **PhoneSploit Pro**, choose `Connect a device`, and enter the target’s `IP address` to connect over Wi‑Fi.
+9. Go to `Settings` > `About Phone` > `Status` > `IP address` and note the phone's `IP address`.
+10. Run **Atom**, choose `Connect a device`, and enter the target's `IP address` to connect over Wi‑Fi.
 
 ### Connecting the Android phone the next time
 
 1. Connect your Android device and host computer to the same Wi‑Fi network.
-2. Run **PhoneSploit Pro**, choose `Connect a device`, and enter the target’s `IP address` to connect over Wi‑Fi.
+2. Run **Atom**, choose `Connect a device`, and enter the target's `IP address` to connect over Wi‑Fi.
 
 ---
 
@@ -291,7 +289,7 @@ This tool is tested on:
 - ✅ Termux (Android)
 
 > [!NOTE]
-> New features are primarily tested on **Linux**, so **Linux** is recommended for running PhoneSploit Pro.
+> New features are primarily tested on **Linux**, so **Linux** is recommended for running Atom.
 > Some features might not work properly on Windows.
 
 ---
@@ -384,7 +382,7 @@ Or see: [Windows: antivirus and installers](https://docs.metasploit.com/docs/usi
 
 Visit the `scrcpy` GitHub page for the latest installation instructions: [scrcpy — get the app](https://github.com/Genymobile/scrcpy#get-the-app)
 
-**On Windows**: Copy all files from the extracted **scrcpy** folder into the **PhoneSploit-Pro** folder.
+**On Windows**: Copy all files from the extracted **scrcpy** folder into the **Atom** folder.
 
 > [!IMPORTANT]  
 > If `scrcpy` is not available for your Linux distribution (for example **Kali Linux**), you can install it manually ([Linux guide](https://github.com/Genymobile/scrcpy/blob/master/doc/linux.md))
@@ -450,36 +448,26 @@ pkg install nmap
 
 - This project and its developer do not promote any illegal activity and are not responsible for any misuse or damage caused by this project.
 - This project is for educational purposes only.
-- Please do not use this tool on other people’s devices without their permission.
+- Please do not use this tool on other people's devices without their permission.
 - Do not use this tool to harm others.
 - Use this project responsibly and only on your own devices or with explicit authorization.
-- It is the end user’s responsibility to obey all applicable local, state, federal, and international laws.
+- It is the end user's responsibility to obey all applicable local, state, federal, and international laws.
 
 ---
 
 ## Developer
 
-<a href="https://github.com/azeemidrisi/">
-<!--   <img src="https://contrib.rocks/image?repo=azeemidrisi/phonesploit-pro" /> -->
- <img width="150px" src=https://github.com/AzeemIdrisi/PhoneSploit-Pro/assets/112647789/a5fa646c-93a2-460f-bcb7-528fedb147e9 />
-
+<a href="https://github.com/457R0/">
+ <img width="150px" src="https://github.com/457R0.png" />
 </a>
 
-**Azeem Idrisi** - [@AzeemIdrisi](https://github.com/azeemidrisi/)
-
-## Support
-
-If you like my work, you can support me via:
-
-<a href="https://paypal.me/AzeemIdrisi" target="_blank"> <kbd> <img
-        src="https://github.com/AzeemIdrisi/AzeemIdrisi/blob/main/docs/paypal-button-blue.png" alt="PayPal"
-        width="147"></a> <a href="https://www.buymeacoffee.com/AzeemIdrisi" target="_blank"> <kbd> <img src="https://github.com/AzeemIdrisi/AzeemIdrisi/blob/main/docs/default-yellow.png" alt="Buy Me A Coffee" width="200"></a>
+**457R0** - [@457R0](https://github.com/457R0/)
 
 ---
 
 ## Attribution
 
-PhoneSploit Pro is built upon and gratefully acknowledges the contributions of the following open-source projects:
+Atom is built upon and gratefully acknowledges the contributions of the following open-source projects:
 
 - [`adb`](https://developer.android.com/studio/command-line/adb) — Android Debug Bridge (ADB)
 - [`metasploit-framework`](https://www.metasploit.com/) — Metasploit-Framework
@@ -491,4 +479,4 @@ PhoneSploit Pro is built upon and gratefully acknowledges the contributions of t
 
 <hr>
 
-Copyright © 2026 Azeem Idrisi (github.com/AzeemIdrisi)
+Copyright © 2026 TezukaLabs (github.com/457R0)
