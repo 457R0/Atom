@@ -7,8 +7,6 @@ The Swiss Army knife for Android.
 An all-in-one hacking tool written in `Python` to remotely take over Android devices using `ADB`, `scrcpy`, `Nmap`, and `Metasploit-Framework`.
 
 ![Python](https://img.shields.io/badge/python-v3.10%2B-blue)
-![GitHub Repo stars](https://img.shields.io/github/stars/TezukaLabs/Atom?style=social)
-![GitHub forks](https://img.shields.io/github/forks/TezukaLabs/Atom?style=social)
 
 </div>
 
@@ -37,11 +35,6 @@ Connect over USB or Wi‑Fi, then control the device, extract data, stream camer
 
 You no longer need to memorize commands and arguments, Atom does it for you. Pick a number and run.
 
----
-
-## Screenshots
-
-![Screenshot](docs/images/Screenshot-1.png)
 
 ---
 
@@ -95,9 +88,7 @@ You no longer need to memorize commands and arguments, Atom does it for you. Pic
 | **Record microphone audio**              | Record audio from the microphone.                                                                                                                                                                                                                                                                                                                                            |
 | **Stream microphone audio**              | Stream live microphone audio.                                                                                                                                                                                                                                                                                                                                                |
 | **Record device audio**                  | Record internal device audio.                                                                                                                                                                                                                                                                                                                                                |
-| **Stream device audio**                  | Stream live device audio.                                                                                                                                                                                                                                                                                                                                                    |
-| **Hack device completely**               | Automated Metasploit flow: fetch your `IP address` to set `LHOST`; create a payload with `msfvenom`, install it, and run it on the target device; launch and configure **Metasploit-Framework** to obtain a `meterpreter` session. A `meterpreter` session means the device is fully compromised via Metasploit-Framework, and you can run further actions from the session. |
-| **LAN network scan**                     | Discover hosts on the local network to help find a target IP address; probe TCP ports `5555` and `5554` with service detection and show ADB-related fingerprints and hints for likely Android/ADB targets.                                                                                                                                                                   |
+| **Stream device audio**                  | Stream live device audio.                                                                                                                                                                                                                                                                                                                                                    |                                                                                                                                                                   |
 | **TCP port forwarding**                  | Forward, reverse, list, remove, or remove all TCP port forwarding rules over ADB.                                                                                                                                                                                                                                                                                            |
 | **Save logcat snippet**                  | Capture a slice of `logcat` output and save it to a file on the computer.                                                                                                                                                                                                                                                                                                    |
 | **Live logcat stream**                   | Stream `logcat` live from the device.                                                                                                                                                                                                                                                                                                                                        |
@@ -461,7 +452,7 @@ pkg install nmap
  <img width="150px" src="https://github.com/457R0.png" />
 </a>
 
-**457R0** - [@457R0](https://github.com/457R0/)
+[@457R0](https://github.com/457R0/)
 
 ---
 
