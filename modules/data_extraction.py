@@ -186,6 +186,104 @@ def dump_sms(config: AppConfig) -> None:
         print_info(f"Resolved {len(contacts)} contacts for name lookup.")
 
 
+def _format_contacts_output(raw: str) -> str:
+    """Reformat raw adb contacts query output into readable labeled blocks.
+
+    Input rows look like:
+        Row: 0 display_name=John Doe, number=+15551234567
+
+    Output:
+        Name:   John Doe
+        Number: +15551234567
+
+    """
+    row_re = re.compile(r"Row:\s*\d+\s+(.*)")
+    out_lines: list[str] = []
+
+    for line in raw.splitlines():
+        m = row_re.match(line.strip())
+        if not m:
+            continue
+        fields: dict[str, str] = {}
+        for part in m.group(1).split(", "):
+            if "=" in part:
+                k, v = part.split("=", 1)
+                fields[k.strip()] = v.strip()
+        name = fields.get("display_name", "").strip()
+        number = fields.get("number", "").strip()
+        if name or number:
+            out_lines.append(f"Name:   {name or '(unknown)'}")
+            out_lines.append(f"Number: {number or '(unknown)'}")
+            out_lines.append("")
+
+    return "\n".join(out_lines)
+
+
+def _format_call_log_output(raw: str, contacts: dict[str, str]) -> str:
+    """Reformat raw adb call log query output with contact names and MM/DD/YYYY dates.
+
+    Input rows look like:
+        Row: 0 name=John Doe, number=+15551234567, duration=42, date=1790985067898
+
+    Output:
+        Name:     John Doe (+15551234567)
+        Date:     10/03/2026
+        Duration: 42s
+        Type:     incoming
+
+    """
+    # Call type codes from Android's CallLog.Calls constants
+    call_types = {
+        "1": "Incoming",
+        "2": "Outgoing",
+        "3": "Missed",
+        "4": "Voicemail",
+        "5": "Rejected",
+        "6": "Blocked",
+    }
+
+    row_re = re.compile(r"Row:\s*\d+\s+(.*)")
+    out_lines: list[str] = []
+
+    for line in raw.splitlines():
+        m = row_re.match(line.strip())
+        if not m:
+            continue
+        fields: dict[str, str] = {}
+        # Split carefully — values can contain commas (e.g. formatted names)
+        for part in re.split(r",\s*(?=\w+=)", m.group(1)):
+            if "=" in part:
+                k, v = part.split("=", 1)
+                fields[k.strip()] = v.strip()
+
+        name = fields.get("name", "").strip()
+        number = fields.get("number", "").strip()
+        duration = fields.get("duration", "").strip()
+        date_ms = fields.get("date", "").strip()
+        call_type = fields.get("type", "").strip()
+
+        # Resolve name from contacts map if not already known
+        if not name and number:
+            name = contacts.get(_normalize_phone(number), "")
+
+        name_label = f"{name} ({number})" if name and number else (name or number or "(unknown)")
+        date_str = (
+            datetime.fromtimestamp(int(date_ms) / 1000).strftime("%m/%d/%Y")
+            if date_ms.isdigit()
+            else date_ms
+        )
+        duration_str = f"{duration}s" if duration.isdigit() else duration
+        type_str = call_types.get(call_type, call_type or "unknown")
+
+        out_lines.append(f"Name:     {name_label}")
+        out_lines.append(f"Date:     {date_str}")
+        out_lines.append(f"Duration: {duration_str}")
+        out_lines.append(f"Type:     {type_str}")
+        out_lines.append("")
+
+    return "\n".join(out_lines)
+
+
 def dump_contacts(config: AppConfig) -> None:
     if not confirm(
         "Export all contacts from the device to a file on this computer? "
@@ -205,7 +303,21 @@ def dump_contacts(config: AppConfig) -> None:
             ]
         )
 
-    _write_dump(dest, result)
+    if result.returncode != 0:
+        err_msg = result.stderr.strip() or "(no stderr from adb)"
+        print_error(f"Dump failed: {err_msg}")
+        return
+
+    formatted = _format_contacts_output(result.stdout)
+
+    try:
+        dest.write_text(formatted, encoding="utf-8")
+    except OSError as e:
+        print_error(f"Could not write dump file {dest}: {e}")
+        return
+
+    count = formatted.count("Name:")
+    print_success(f"Saved {count} contacts to: {dest}")
 
 
 def dump_call_logs(config: AppConfig) -> None:
@@ -218,16 +330,35 @@ def dump_call_logs(config: AppConfig) -> None:
     file_name = f"call_logs_dump-{_timestamp()}.txt"
     dest = Path(save_dir) / file_name
 
+    with task_status("[info]Fetching contacts for name resolution…[/info]"):
+        contacts = _fetch_contacts_map(config)
+
     with task_status("[info]Dumping call logs…[/info]"):
         result = adb(
             [
                 "shell", "content", "query",
                 "--uri", "content://call_log/calls",
-                "--projection", "name:number:duration:date",
+                "--projection", "name:number:duration:date:type",
             ]
         )
 
-    _write_dump(dest, result)
+    if result.returncode != 0:
+        err_msg = result.stderr.strip() or "(no stderr from adb)"
+        print_error(f"Dump failed: {err_msg}")
+        return
+
+    formatted = _format_call_log_output(result.stdout, contacts)
+
+    try:
+        dest.write_text(formatted, encoding="utf-8")
+    except OSError as e:
+        print_error(f"Could not write dump file {dest}: {e}")
+        return
+
+    count = formatted.count("Name:")
+    print_success(f"Saved {count} call log entries to: {dest}")
+    if contacts:
+        print_info(f"Resolved {len(contacts)} contacts for name lookup.")
 
 
 # ---------------------------------------------------------------------------
