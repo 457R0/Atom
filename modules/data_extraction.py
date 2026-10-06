@@ -65,33 +65,81 @@ def _normalize_phone(number: str) -> str:
     return digits[-10:] if len(digits) >= 10 else digits
 
 
-def _fetch_contacts_map(config: AppConfig) -> dict[str, str]:
-    """Query device contacts; return {normalized_number: display_name}."""
-    result = adb(
-        [
-            "shell", "content", "query",
-            "--uri", "content://contacts/phones/",
-            "--projection", "display_name:number",
-        ]
-    )
+def _parse_contacts_rows(stdout: str) -> dict[str, str]:
+    """Parse adb content query rows into {normalized_number: display_name}.
+
+    Handles both AOSP and Samsung One UI column name variants.
+    Splits on ', key=' boundaries to avoid breaking on commas in names.
+    """
     contacts: dict[str, str] = {}
-    if result.returncode != 0:
-        return contacts
     row_re = re.compile(r"Row:\s*\d+\s+(.*)")
-    for line in result.stdout.splitlines():
+    # Split on ', word=' boundaries — safe even when values contain commas
+    field_split_re = re.compile(r",\s*(?=\w+=)")
+
+    for line in stdout.splitlines():
         m = row_re.match(line.strip())
         if not m:
             continue
         fields: dict[str, str] = {}
-        for part in m.group(1).split(", "):
+        for part in field_split_re.split(m.group(1)):
             if "=" in part:
                 k, v = part.split("=", 1)
                 fields[k.strip()] = v.strip()
+
+        # AOSP: display_name / number
+        # Samsung One UI: display_name / data1  (data1 holds the phone number)
         name = fields.get("display_name", "").strip()
-        number = fields.get("number", "").strip()
+        number = (
+            fields.get("number")
+            or fields.get("data1")
+            or ""
+        ).strip()
+
         if name and number:
             contacts[_normalize_phone(number)] = name
+
     return contacts
+
+
+def _fetch_contacts_map(config: AppConfig) -> dict[str, str]:
+    """Query device contacts; return {normalized_number: display_name}.
+
+    Tries multiple URIs in order — AOSP standard first, then Samsung One UI
+    variants — returning the first non-empty result.
+    """
+    candidate_queries = [
+        # AOSP / stock Android
+        {
+            "uri": "content://contacts/phones/",
+            "projection": "display_name:number",
+        },
+        # Samsung One UI (data/phones uses data1 for the number column)
+        {
+            "uri": "content://com.android.contacts/data/phones",
+            "projection": "display_name:data1",
+        },
+        # Fallback: raw contacts data table, broader but works on most ROMs
+        {
+            "uri": "content://com.android.contacts/data",
+            "projection": "display_name:data1",
+        },
+    ]
+
+    for query in candidate_queries:
+        result = adb(
+            [
+                "shell", "content", "query",
+                "--uri", query["uri"],
+                "--projection", query["projection"],
+            ]
+        )
+        if result.returncode != 0:
+            continue
+        contacts = _parse_contacts_rows(result.stdout)
+        if contacts:
+            return contacts
+
+    return {}
 
 
 def _format_sms_output(raw: str, contacts: dict[str, str]) -> str:
@@ -198,6 +246,7 @@ def _format_contacts_output(raw: str) -> str:
 
     """
     row_re = re.compile(r"Row:\s*\d+\s+(.*)")
+    field_split_re = re.compile(r",\s*(?=\w+=)")
     out_lines: list[str] = []
 
     for line in raw.splitlines():
@@ -205,12 +254,13 @@ def _format_contacts_output(raw: str) -> str:
         if not m:
             continue
         fields: dict[str, str] = {}
-        for part in m.group(1).split(", "):
+        for part in field_split_re.split(m.group(1)):
             if "=" in part:
                 k, v = part.split("=", 1)
                 fields[k.strip()] = v.strip()
         name = fields.get("display_name", "").strip()
-        number = fields.get("number", "").strip()
+        # AOSP uses 'number', Samsung One UI uses 'data1'
+        number = (fields.get("number") or fields.get("data1") or "").strip()
         if name or number:
             out_lines.append(f"Name:   {name or '(unknown)'}")
             out_lines.append(f"Number: {number or '(unknown)'}")
@@ -294,18 +344,27 @@ def dump_contacts(config: AppConfig) -> None:
     file_name = f"contacts_dump-{_timestamp()}.txt"
     dest = Path(save_dir) / file_name
 
-    with task_status("[info]Dumping contacts…[/info]"):
-        result = adb(
-            [
-                "shell", "content", "query",
-                "--uri", "content://contacts/phones/",
-                "--projection", "display_name:number",
-            ]
-        )
+    # Try URIs in order — AOSP first, Samsung One UI fallbacks
+    candidate_queries = [
+        {"uri": "content://contacts/phones/",              "projection": "display_name:number"},
+        {"uri": "content://com.android.contacts/data/phones", "projection": "display_name:data1"},
+        {"uri": "content://com.android.contacts/data",     "projection": "display_name:data1"},
+    ]
 
-    if result.returncode != 0:
-        err_msg = result.stderr.strip() or "(no stderr from adb)"
-        print_error(f"Dump failed: {err_msg}")
+    result = None
+    with task_status("[info]Dumping contacts…[/info]"):
+        for query in candidate_queries:
+            r = adb([
+                "shell", "content", "query",
+                "--uri", query["uri"],
+                "--projection", query["projection"],
+            ])
+            if r.returncode == 0 and r.stdout.strip():
+                result = r
+                break
+
+    if not result or not result.stdout.strip():
+        print_error("No contacts returned from any known URI — device may not allow shell access to contacts.")
         return
 
     formatted = _format_contacts_output(result.stdout)
